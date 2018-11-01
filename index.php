@@ -75,8 +75,8 @@ $aemet=aemet::init('3343Y');
 		</div>
 		
 		<div class="content windowAjustTemp">
-			<button class="btnSmall btnToMain"> << </button>
-			<button class="btnSmall btnRefreshApp"> R </button>
+			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
+			<button class="btnSmall btnRefreshApp"><i class="fas fa-sync-alt"></i></button>
 			
 			<div class="tempAjust dia">
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
@@ -102,7 +102,7 @@ $aemet=aemet::init('3343Y');
 		</div>
 		
 		<div class="content windowPredicionAemet">
-			<button class="btnSmall btnToMain"> << </button>
+			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
 			<br><br><br><br>
 			<script type='text/javascript' src='http://www.aemet.es/es/eltiempo/prediccion/municipios/launchwidget/sevilla-la-nueva-id28141?w=g4p01110001ohmffffffw600z190x4f86d9t95b6e9r1s8n2'></script>
 		</div>
