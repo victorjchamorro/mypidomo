@@ -126,11 +126,12 @@ div.thermometers .label.humedad1,div.thermometers .label.humedad2{ font-size:30p
 div.thermometers .label.humedad1 img,div.thermometers .label.humedad2 img{ width:30px;height:30px;}
 
 button.btn{ width:200px; height:60px;}
-button.btnSmall{ width:100px; height:60px;}
+button.btnSmall{ width:50px; height:40px;}
 button.btn i{font-size:32px;}
 
 button.btnToMain{ position:absolute;top:0;right:0;}
 button.btnRefreshApp{ position:absolute;bottom:0;right:0;}
+button.btnHaltApp{ position:absolute;bottom:0;left:0;}
 
 div.tempAjust.dia{ position:absolute;top:80px;left:100px;width:200px;}
 div.tempAjust.noche{ position:absolute;top:80px;left:350px;width:200px;}
@@ -146,3 +147,8 @@ div.dayAjust button.btnDay{width:80px;height:80px;font-size:22px}
 div.date{width:100%;font-size:36px;font-family: 'Dosis';}
 div.date span.hour{font-size:70px;display:inline-block;width:240px;padding-left:0;text-align:left;}
 div.date span.date{text-align:center;}
+
+div.hourAjust{ position:absolute;top:280px;left:0;right:0;height:60px;}
+div.hourAjust .lineHour{float:left;margin:0 1px 0 0;padding:10px 0;display:inline-block;border:1px solid #fff;}
+div.hourAjust .lineHour.dia{ background:#f3f3f3;color:#000;}
+	

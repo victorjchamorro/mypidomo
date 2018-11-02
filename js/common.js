@@ -2,6 +2,7 @@ var myDomo={
 	
 	init:function(){
 		console.log('Inicio!');
+		myDomo.printHourBar();
 		myDomo.windowMain();
 		
 		jQuery('div.sensorUno').click(function(){myDomo.windowAjustTemp();});
@@ -16,6 +17,11 @@ var myDomo={
 		myDomo.refreshExternalTemp();
 		
 		window.setInterval(function(){ myDomo.fecha_hora() }, 500);
+	},
+	
+	printHourBar:function(){
+		var totalWidth=jQuery('div.hourAjust').width();
+		jQuery('div.hourAjust .lineHour').width((totalWidth/24)-3);
 	},
 	
 	fecha_hora:function(){

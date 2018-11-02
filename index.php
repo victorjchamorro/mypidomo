@@ -77,6 +77,7 @@ $aemet=aemet::init('3343Y');
 		<div class="content windowAjustTemp">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
 			<button class="btnSmall btnRefreshApp"><i class="fas fa-sync-alt"></i></button>
+			<button class="btnSmall btnHaltApp"><i class="fas fa-power-off"></i></button>
 			
 			<div class="tempAjust dia">
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
@@ -88,6 +89,33 @@ $aemet=aemet::init('3343Y');
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
 				<input type="number" value="18" name="tempNoche" />
 				<button class="btn btnDown"><i class="fas fa-caret-down"></i></button>
+			</div>
+			
+			<div class="hourAjust">
+				<span class="lineHour">1</span>
+				<span class="lineHour">2</span>
+				<span class="lineHour">3</span>
+				<span class="lineHour">4</span>
+				<span class="lineHour">5</span>
+				<span class="lineHour">6</span>
+				<span class="lineHour">7</span>
+				<span class="lineHour">8</span>
+				<span class="lineHour">9</span>
+				<span class="lineHour">10</span>
+				<span class="lineHour">11</span>
+				<span class="lineHour">12</span>
+				<span class="lineHour">13</span>
+				<span class="lineHour">14</span>
+				<span class="lineHour">15</span>
+				<span class="lineHour">16</span>
+				<span class="lineHour">17</span>
+				<span class="lineHour">18</span>
+				<span class="lineHour dia">19</span>
+				<span class="lineHour dia">20</span>
+				<span class="lineHour dia">21</span>
+				<span class="lineHour dia">22</span>
+				<span class="lineHour dia">23</span>
+				<span class="lineHour">24</span>
 			</div>
 			
 			<div class="dayAjust">
