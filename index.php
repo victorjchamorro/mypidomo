@@ -24,6 +24,15 @@ if (isset($_GET['module'])){
 				'humedad'=>aemet::init('3343Y')->getHumedad()
 			));
 			die();
+		case 'halt':
+			if ($_SERVER['REMOTE_ADDR']==$_SERVER['SERVER_ADDR']){
+				echo system('sudo /sbin/halt');
+				echo "apagando...";
+			}else{
+				echo $_SERVER['REMOTE_ADDR']."<br>";
+				echo $_SERVER['SERVER_ADDR'];
+			}
+			die();
 		break;
 	}
 }
@@ -42,6 +51,15 @@ $aemet=aemet::init('3343Y');
 		
 	</head>
 	<body>
+		<div class="mainMenu">
+			<button class="btn menuTemperatura">Temperatura</button>
+			<button class="btn menuPrediccion">Predicción</button>
+			<button class="btn">Históricos</button>
+			<button class="btn">Luces</button>
+			<button class="btn">Piscina</button>
+			<button class="btnSmall btnRefreshApp"><i class="fas fa-sync-alt"></i></button>
+			<button class="btnSmall btnHaltApp"><i class="fas fa-power-off"></i></button>
+		</div>
 		<div class="content windowMain">
 			<div class="thermometers">
 				<div class="label">Salón</div><div class="label">Exterior</div>
@@ -70,22 +88,29 @@ $aemet=aemet::init('3343Y');
 				<div class="label humedad1"></div><div class="label humedad2"></div>
 				<div class="date"><span class="hour"></span> <span class="date"></span></div>
 			</div>
-			
+			<div class="statusBar">
+				<div class="menu"><i class="fas fa-ellipsis-h"></i></div>
+				<div class="modeDay"><i class="fas fa-sun"></i></div>
+				<div class="modeNight hide"><i class="far fa-moon"></i></div>
+				<div class="manual hide"><i class="far fa-hand-paper"></i></div>
+				<div class="sheduled"><i class="far fa-clock"></i></div>
+				<div class="runing"><i class="fas fa-cog"></i></div>
+			</div>
 			
 		</div>
 		
 		<div class="content windowAjustTemp">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
-			<button class="btnSmall btnRefreshApp"><i class="fas fa-sync-alt"></i></button>
-			<button class="btnSmall btnHaltApp"><i class="fas fa-power-off"></i></button>
 			
 			<div class="tempAjust dia">
+				<label><i class="fas fa-sun"></i></label>
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
 				<input type="number" value="20" name="tempDia" />
 				<button class="btn btnDown"><i class="fas fa-caret-down"></i></button>
 			</div>
 			
 			<div class="tempAjust noche">
+				<label><i class="fas fa-moon"></i></label>
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
 				<input type="number" value="18" name="tempNoche" />
 				<button class="btn btnDown"><i class="fas fa-caret-down"></i></button>
@@ -110,11 +135,11 @@ $aemet=aemet::init('3343Y');
 				<span class="lineHour">16</span>
 				<span class="lineHour">17</span>
 				<span class="lineHour">18</span>
-				<span class="lineHour dia">19</span>
-				<span class="lineHour dia">20</span>
-				<span class="lineHour dia">21</span>
-				<span class="lineHour dia">22</span>
-				<span class="lineHour dia">23</span>
+				<span class="lineHour day">19</span>
+				<span class="lineHour day">20</span>
+				<span class="lineHour day">21</span>
+				<span class="lineHour day">22</span>
+				<span class="lineHour day">23</span>
 				<span class="lineHour">24</span>
 			</div>
 			
@@ -123,7 +148,7 @@ $aemet=aemet::init('3343Y');
 				<button class="btn btnDay">M</button>
 				<button class="btn btnDay">X</button>
 				<button class="btn btnDay">J</button>
-				<button class="btn btnDay">V</button>
+				<button class="btn btnDay active">V</button>
 				<button class="btn btnDay">S</button>
 				<button class="btn btnDay">D</button>
 			</div>
@@ -132,7 +157,7 @@ $aemet=aemet::init('3343Y');
 		<div class="content windowPredicionAemet">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
 			<br><br><br><br>
-			<script type='text/javascript' src='http://www.aemet.es/es/eltiempo/prediccion/municipios/launchwidget/sevilla-la-nueva-id28141?w=g4p01110001ohmffffffw600z190x4f86d9t95b6e9r1s8n2'></script>
+			<div class="widget"></div>
 		</div>
 	</body>
 </html>
