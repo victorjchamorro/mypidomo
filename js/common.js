@@ -82,10 +82,10 @@ var myDomo={
 			dataType:'json',
 			url:'/cgi-bin/temp.cgi',
 			success:function(data){
-				roundTemp=Math.round(data.temp*100,2)/100;
-				decimalTemp=Math.round((roundTemp % 1)*100);
+				roundTemp=Math.round(data.temp*10)/10;
+				decimalTemp=Math.round((roundTemp % 1)*10);
 				
-				roundHumedad=Math.round(data.humidity*100,2)/100;
+				roundHumedad=Math.round(data.humidity*100)/100;
 				
 				jQuery('div.sensorUno span.temp1').text(Math.floor(data.temp));
 				jQuery('div.sensorUno span.temp2').text('.'+decimalTemp);
