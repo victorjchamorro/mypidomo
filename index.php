@@ -17,6 +17,7 @@ if (isset($_GET['module'])){
 	switch($_GET['module']){
 		case 'api_temp':
 			$datos=$aemet=aemet::init('3343Y')->getTemperatura();
+			header('Content-Type: application/json');
 			echo json_encode(array(
 				'temp'=>$datos,
 				'entero'=>tempParts($datos,0),
@@ -36,7 +37,6 @@ if (isset($_GET['module'])){
 		break;
 	}
 }
-$aemet=aemet::init('3343Y');
 ?><!DOCTYPE html>
 <html>
 	<head>
@@ -51,6 +51,7 @@ $aemet=aemet::init('3343Y');
 		
 	</head>
 	<body>
+	<div class="all">
 		<div class="mainMenu">
 			<button class="btn menuTemperatura">Temperatura</button>
 			<button class="btn menuPrediccion">Predicción</button>
@@ -159,5 +160,6 @@ $aemet=aemet::init('3343Y');
 			<br><br><br><br>
 			<div class="widget"></div>
 		</div>
+	</div>
 	</body>
 </html>

@@ -90,7 +90,7 @@ var myDomo={
 				jQuery('div.sensorUno span.temp1').text(Math.floor(data.temp));
 				jQuery('div.sensorUno span.temp2').text('.'+decimalTemp);
 				
-				jQuery('div.humedad1').html('<img src="./imgs/tint_icon.png"/> '+roundHumedad+'%');
+				jQuery('div.humedad1').html('<i class="fas fa-tint"></i> '+roundHumedad+'%');
 				
 				window.setTimeout(myDomo.refresh,10000);
 			},
@@ -107,7 +107,7 @@ var myDomo={
 			success:function(data){
 				jQuery('div.sensorDos span.temp1').text(data.entero);
 				jQuery('div.sensorDos span.temp2').text('.'+data.decimal);
-				jQuery('div.humedad2').html('<img src="./imgs/tint_icon.png"/> '+data.humedad+'%');
+				jQuery('div.humedad2').html('<i class="fas fa-tint"></i> '+data.humedad+'%');
 				window.setTimeout(myDomo.refreshExternalTemp,300000);
 			},
 			error:function(){

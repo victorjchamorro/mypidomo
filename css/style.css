@@ -15,6 +15,13 @@ body {
 
 .hide{display:none !important;}
 
+div.all{
+	position:relative;
+	max-width:750px;
+	max-height:450px;
+	margin:0 auto;
+}
+
 div.content.windowMain {
 	display:none;
 	/*
