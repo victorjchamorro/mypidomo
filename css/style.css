@@ -32,7 +32,8 @@ div.content.windowMain {
 }
 
 div.thermometers {
-	margin: 20px auto;
+	margin: 0 auto;
+	padding-top:20px;
 	width: 560px;
 }
 

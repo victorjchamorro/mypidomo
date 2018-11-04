@@ -62,6 +62,14 @@ if (isset($_GET['module'])){
 			<button class="btnSmall btnHaltApp"><i class="fas fa-power-off"></i></button>
 		</div>
 		<div class="content windowMain">
+			<div class="statusBar">
+				<div class="menu"><i class="fas fa-ellipsis-h"></i></div>
+				<div class="modeDay"><i class="fas fa-sun"></i></div>
+				<div class="modeNight hide"><i class="far fa-moon"></i></div>
+				<div class="manual hide"><i class="far fa-hand-paper"></i></div>
+				<div class="sheduled"><i class="far fa-clock"></i></div>
+				<div class="runing"><i class="fas fa-cog"></i></div>
+			</div>
 			<div class="thermometers">
 				<div class="label">Salón</div><div class="label">Exterior</div>
 				<div class="de sensorUno">
@@ -89,15 +97,6 @@ if (isset($_GET['module'])){
 				<div class="label humedad1"></div><div class="label humedad2"></div>
 				<div class="date"><span class="hour"></span> <span class="date"></span></div>
 			</div>
-			<div class="statusBar">
-				<div class="menu"><i class="fas fa-ellipsis-h"></i></div>
-				<div class="modeDay"><i class="fas fa-sun"></i></div>
-				<div class="modeNight hide"><i class="far fa-moon"></i></div>
-				<div class="manual hide"><i class="far fa-hand-paper"></i></div>
-				<div class="sheduled"><i class="far fa-clock"></i></div>
-				<div class="runing"><i class="fas fa-cog"></i></div>
-			</div>
-			
 		</div>
 		
 		<div class="content windowAjustTemp">
