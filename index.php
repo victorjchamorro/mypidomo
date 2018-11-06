@@ -1,5 +1,7 @@
 <?php
 require_once './lib/aemet.class.php';
+require_once './lib/gpio.class.php';
+require_once './lib/UTLIni.php';
 ini_set('display_errors',1);
 error_reporting(E_ALL);
 function addRoute($file){
@@ -15,6 +17,15 @@ function tempParts($temp, $index) {
 }
 if (isset($_GET['module'])){
 	switch($_GET['module']){
+		case 'rele_on':
+			gpio::write('20','1');
+			die();
+		case 'rele_off':
+			gpio::write('20','0');
+			die();
+		case 'rele_status':
+			echo gpio::read('20');
+			die();
 		case 'api_temp':
 			$datos=$aemet=aemet::init('3343Y')->getTemperatura();
 			header('Content-Type: application/json');
@@ -32,6 +43,25 @@ if (isset($_GET['module'])){
 			}else{
 				echo $_SERVER['REMOTE_ADDR']."<br>";
 				echo $_SERVER['SERVER_ADDR'];
+			}
+			die();
+		case 'getDataTemp':
+			UTLIni::addIniFile('./data/temp.ini','TEMP');
+			header('Content-Type: application/json');
+			echo json_encode(UTLIni::$conf['TEMP']);
+			die();
+		case 'setDataTemp':
+			UTLIni::addIniFile('./data/temp.ini','TEMP');
+			UTLIni::$conf['TEMP']['days']=$_GET['days'];
+			UTLIni::$conf['TEMP']['temp']['day']=$_GET['temp']['day'];
+			UTLIni::$conf['TEMP']['temp']['night']=$_GET['temp']['night'];
+			try{
+				$ok=UTLIni::writeINI('TEMP',false);
+				header('Content-Type: application/json');
+				echo json_encode(array('ok'=>$ok));
+			}catch(Exception $e){
+				header('Content-Type: application/json');
+				echo json_encode(array('ok'=>false,'error'=>$e->getMessage()));
 			}
 			die();
 		break;
@@ -105,14 +135,14 @@ if (isset($_GET['module'])){
 			<div class="tempAjust dia">
 				<label><i class="fas fa-sun"></i></label>
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
-				<input type="number" value="20" name="tempDia" />
+				<input type="number" value="20" name="tempDay" />
 				<button class="btn btnDown"><i class="fas fa-caret-down"></i></button>
 			</div>
 			
 			<div class="tempAjust noche">
 				<label><i class="fas fa-moon"></i></label>
 				<button class="btn btnUp"><i class="fas fa-caret-up"></i></button>
-				<input type="number" value="18" name="tempNoche" />
+				<input type="number" value="18" name="tempNight" />
 				<button class="btn btnDown"><i class="fas fa-caret-down"></i></button>
 			</div>
 			
@@ -144,13 +174,13 @@ if (isset($_GET['module'])){
 			</div>
 			
 			<div class="dayAjust">
-				<button class="btn btnDay">L</button>
-				<button class="btn btnDay">M</button>
-				<button class="btn btnDay">X</button>
-				<button class="btn btnDay">J</button>
-				<button class="btn btnDay active">V</button>
-				<button class="btn btnDay">S</button>
-				<button class="btn btnDay">D</button>
+				<button class="btn btnDay" data-weekday="0">L</button>
+				<button class="btn btnDay" data-weekday="1">M</button>
+				<button class="btn btnDay" data-weekday="2">X</button>
+				<button class="btn btnDay" data-weekday="3">J</button>
+				<button class="btn btnDay active" data-weekday="4">V</button>
+				<button class="btn btnDay" data-weekday="5">S</button>
+				<button class="btn btnDay" data-weekday="6">D</button>
 			</div>
 		</div>
 		

@@ -1,5 +1,8 @@
 var myDomo={
 	
+	dataTemperature:null,
+	curWeekDay:null,
+	
 	init:function(){
 		console.log('Inicio!');
 		myDomo.printHourBar();
@@ -113,7 +116,25 @@ var myDomo={
 			error:function(){
 				window.setTimeout(myDomo.refreshExternalTemp,300000);
 			}
-		});	
+		});
+	},
+	
+	getDataTemp:function($func){
+		jQuery.ajax({
+			dataType:'json',
+			url:'/index.php?module=getDataTemp',
+			success:function(data){
+				if (data.temp && data.temp.day){
+					myDomo.dataTemperature=data
+					$func();
+				}else{
+					console.log(data);
+				}
+			},
+			error:function(error){
+				console.log(error);
+			}
+		});
 	},
 	
 	windowAjustTemp:function(){
@@ -124,8 +145,39 @@ var myDomo={
 		var curWeekDay=today.getDay();
 		curWeekDay--;
 		if (curWeekDay<0){ curWeekDay=6;}
+		
+		myDomo.curWeekDay=curWeekDay;
+		
+		myDomo.getDataTemp(function(){
+			myDomo.loadWeekDay();
+			jQuery('input[name=tempNight]').val(myDomo.dataTemperature.temp.night);
+			jQuery('input[name=tempDay]').val(myDomo.dataTemperature.temp.day);
+		});
+		
+		jQuery('.dayAjust .btnDay').unbind('click').click(function(){
+			myDomo.curWeekDay=jQuery(this).data('weekday');
+			console.log('WeekDay: '+myDomo.curWeekDay);
+			myDomo.loadWeekDay();
+		});
+	},
+	
+	loadWeekDay:function(){
+		
 		var $days=jQuery('div.dayAjust .btnDay').removeClass('active');
-		$days.eq(curWeekDay).addClass('active');
+		$days.eq(myDomo.curWeekDay).addClass('active');
+		
+		confDay=myDomo.dataTemperature.days[myDomo.curWeekDay].split("");
+		
+		jQuery('.hourAjust .lineHour').each(function(key,obj){
+			$btnHour=jQuery(obj);
+			$btnHour.data('hour',key);
+			
+			if (confDay[key]==1){
+				$btnHour.addClass('day');
+			}else{
+				jQuery(obj).removeClass('day');
+			}
+		});
 	},
 	
 	windowPredicionAemet:function(){
@@ -147,15 +199,46 @@ var myDomo={
 	btnUpClick:function(obj){
 		$input=jQuery(obj).parent().find('input[type=number]');
 		$input.val(parseInt($input.val())+1);
+		myDomo.saveHoursWeekDay();
 	},
 	
 	btnDownClick:function(obj){
 		$input=jQuery(obj).parent().find('input[type=number]');
 		$input.val(parseInt($input.val())-1);
+		myDomo.saveHoursWeekDay();
 	},
 	
 	lineHourClick:function(obj){
-		jQuery(obj).toggleClass('day');
+		$obj=jQuery(obj);
+		$obj.toggleClass('day');
+		confDay=myDomo.dataTemperature.days[myDomo.curWeekDay].split("");
+		confDay[$obj.data('hour')]=($obj.hasClass('day') ? '1' : '0');
+		myDomo.dataTemperature.days[myDomo.curWeekDay]=confDay.join('');
+		myDomo.saveHoursWeekDay();
+	},
+	
+	saveHoursWeekDay(){
+		jQuery.ajax({
+			dataType:'json',
+			url:'/index.php?module=setDataTemp',
+			data:{
+				days:myDomo.dataTemperature.days,
+				temp:{
+					day:jQuery('input[name=tempDay]').val(),
+					night:jQuery('input[name=tempNight]').val()
+				}
+			},
+			success:function(data){
+				if (data.ok){
+					console.log('saved!');
+				}else{
+					console.log(data);
+				}
+			},
+			error:function(error){
+				console.log(error);
+			}
+		});
 	}
 	
 };
