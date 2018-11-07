@@ -147,6 +147,7 @@ if (isset($_GET['module'])){
 			</div>
 			
 			<div class="hourAjust">
+				<span class="lineHour">00</span>
 				<span class="lineHour">1</span>
 				<span class="lineHour">2</span>
 				<span class="lineHour">3</span>
@@ -170,7 +171,6 @@ if (isset($_GET['module'])){
 				<span class="lineHour day">21</span>
 				<span class="lineHour day">22</span>
 				<span class="lineHour day">23</span>
-				<span class="lineHour">24</span>
 			</div>
 			
 			<div class="dayAjust">
