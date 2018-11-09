@@ -1,6 +1,7 @@
 <?php
 require_once './lib/aemet.class.php';
 require_once './lib/gpio.class.php';
+require_once './lib/database.class.php';
 require_once './lib/UTLIni.php';
 ini_set('display_errors',1);
 error_reporting(E_ALL);
@@ -17,6 +18,18 @@ function tempParts($temp, $index) {
 }
 if (isset($_GET['module'])){
 	switch($_GET['module']){
+		case 'getLastData':
+			$db=new DBConn();
+			$rs=$db->query('SELECT date,temperature,humidity FROM `temp` ORDER BY date DESC LIMIT 1');
+			$data=$rs->fetchArray();
+			header('Content-Type: application/json');
+			echo json_encode(array(
+				'rele_status'=>gpio::read('20'),
+				'temp'=>$data['temperature'],
+				'humidity'=>$data['humidity'],
+				'date'=>$data['date']
+			));
+			die();
 		case 'rele_on':
 			gpio::write('20','1');
 			die();
@@ -88,6 +101,7 @@ if (isset($_GET['module'])){
 			<button class="btn">Históricos</button>
 			<button class="btn">Luces</button>
 			<button class="btn">Piscina</button>
+			<button class="btn">Riego</button>
 			<button class="btnSmall btnRefreshApp"><i class="fas fa-sync-alt"></i></button>
 			<button class="btnSmall btnHaltApp"><i class="fas fa-power-off"></i></button>
 		</div>

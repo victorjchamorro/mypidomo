@@ -83,7 +83,8 @@ var myDomo={
 	refresh:function(){
 		jQuery.ajax({
 			dataType:'json',
-			url:'/cgi-bin/temp.cgi',
+			//url:'/cgi-bin/temp.cgi',
+			url:'/?module=getLastData',
 			success:function(data){
 				roundTemp=Math.round(data.temp*10)/10;
 				decimalTemp=Math.round((roundTemp % 1)*10);
@@ -92,6 +93,12 @@ var myDomo={
 				
 				jQuery('div.sensorUno span.temp1').text(Math.floor(data.temp));
 				jQuery('div.sensorUno span.temp2').text('.'+decimalTemp);
+				
+				if (data.rele_status=='1'){
+					jQuery('div.statusBar .runing').addClass('on');
+				}else{
+					jQuery('div.statusBar .runing').removeClass('on');
+				}
 				
 				jQuery('div.humedad1').html('<i class="fas fa-tint"></i> '+roundHumedad+'%');
 				

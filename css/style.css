@@ -138,7 +138,7 @@ div.thermometers .label.humedad1 img,div.thermometers .label.humedad2 img{ width
 div.statusBar{position: absolute;top:0;left:0;bottom:0;	}
 div.statusBar .menu i{font-size:42px;}
 div.statusBar i{font-size:30px;margin:5px 5px 0 5px;}
-div.statusBar .runing i{
+div.statusBar .runing.on i{
 	animation-name: spin;
 	animation-duration: 2000ms;
 	animation-iteration-count: infinite;

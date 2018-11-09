@@ -12,7 +12,7 @@ class gpio{
 			}
 		}
 		
-		if (file_get_contents('/sys/class/gpio/gpio'.$pin.'/direction')!='out'){
+		if (trim(file_get_contents('/sys/class/gpio/gpio'.$pin.'/direction'))!='out'){
 			file_put_contents('/sys/class/gpio/gpio'.$pin.'/direction','out');
 		}
 		
@@ -21,7 +21,7 @@ class gpio{
 	
 	public static function read($pin){
 		if (is_file('/sys/class/gpio/gpio'.$pin.'/value')){
-			return file_get_contents('/sys/class/gpio/gpio'.$pin.'/value');
+			return trim(file_get_contents('/sys/class/gpio/gpio'.$pin.'/value'));
 		}else{
 			return false;
 		}

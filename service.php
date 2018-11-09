@@ -2,13 +2,7 @@
 <?php 
 require_once __DIR__.'/lib/gpio.class.php';
 require_once __DIR__.'/lib/UTLIni.php';
-
-
-class DBConn extends SQLite3{
-    function __construct(){
-        $this->open(__DIR__.'/data/mypidomo.db');
-    }
-}
+require_once __DIR__.'/lib/database.class.php';
 
 function getLiveData(){
 
@@ -63,21 +57,19 @@ while(true){
 		$calculado=array(
 			'temperature'=>(float) $live['temp'],
 			'humidity'=>(float) $live['humidity'],
-			'conf_temperature'=>(int) getTempConfig()
+			'conf_temperature'=>(float) getTempConfig()
 		);
 		print_r($calculado);
 		
-		if ((int) $calculado['temperature']<$calculado['conf_temperature']){
+		if ($calculado['temperature']<$calculado['conf_temperature']){
 			echo "To ON\n";
 			$count_on++;
 			if ($count_on>1){
-				//mando siempre el valor de gpio por si ha fallado anteriormente
 				gpio::write('20','1');
-			}
-			if ($count_on==2){
 				$db->exec('INSERT INTO timer VALUES(datetime("now"),\'\')');
 			}
-		}else{
+			
+		}elseif($calculado['temperature']>($calculado['conf_temperature']+0.5)){
 			echo "To OFF\n";
 			if ($count_on>0){
 				$count_on=0;
@@ -85,6 +77,8 @@ while(true){
 			}
 			//mando siempre el valor de gpio por si ha fallado anteriormente
 			gpio::write('20','0');
+		}else{
+			//gpio::write('20','1');
 		}
 		
 		
