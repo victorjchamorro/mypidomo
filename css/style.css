@@ -13,6 +13,18 @@ body {
 	color:#ffffff;
 }
 
+table{
+	border-collapse:collapse;
+	width:100%;
+}
+
+table td{
+	border:1px solid white;
+	padding:5px;
+	text-align:center;
+	font-size:22px;
+}
+
 .hide{display:none !important;}
 
 div.all{
@@ -24,11 +36,6 @@ div.all{
 
 div.content.windowMain {
 	display:none;
-	/*
-	position: relative;
-	margin: 0 auto;
-	text-align: left;
-	width: 1000px;*/
 }
 
 div.thermometers {

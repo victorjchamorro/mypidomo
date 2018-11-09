@@ -30,6 +30,27 @@ if (isset($_GET['module'])){
 				'date'=>$data['date']
 			));
 			die();
+		case 'getHistory':
+			$db=new DBConn();
+			$rs=$db->query('SELECT `on`,`off` FROM `timer` ORDER BY `on` DESC LIMIT 10');
+			$html='<table><tr><td>On</td><td>Off</td><td>Time</td></tr>';
+			while($row=$rs->fetchArray()){
+			
+				$dateOn=new DateTime($row[0]);
+				$dateOff=new DateTime($row[1]);
+				
+				$interval=$dateOff->diff($dateOn);
+				
+				$minutos=$interval->format('%i:%sm');
+			
+				$html.="<tr>";
+				$html.="<td>{$row[0]}</td><td>{$row[1]}</td>";
+				$html.="<td>$minutos</td>";
+				$html.="</tr>";
+			}
+			$html.="</table>";
+			echo $html;
+			die();
 		case 'rele_on':
 			gpio::write('20','1');
 			die();
@@ -98,7 +119,7 @@ if (isset($_GET['module'])){
 		<div class="mainMenu">
 			<button class="btn menuTemperatura">Temperatura</button>
 			<button class="btn menuPrediccion">Predicción</button>
-			<button class="btn">Históricos</button>
+			<button class="btn menuHistorial">Históricos</button>
 			<button class="btn">Luces</button>
 			<button class="btn">Piscina</button>
 			<button class="btn">Riego</button>
@@ -202,6 +223,12 @@ if (isset($_GET['module'])){
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
 			<br><br><br><br>
 			<div class="widget"></div>
+		</div>
+		
+		<div class="content windowHistory">
+			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
+			<div class="tableHistory">
+			</div>
 		</div>
 	</div>
 	</body>

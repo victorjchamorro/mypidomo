@@ -4,6 +4,8 @@ require_once __DIR__.'/lib/gpio.class.php';
 require_once __DIR__.'/lib/UTLIni.php';
 require_once __DIR__.'/lib/database.class.php';
 
+date_default_timezone_set('Europe/Madrid');
+
 function getLiveData(){
 
 	$exit=exec(__DIR__.'/service.py');
@@ -59,16 +61,19 @@ while(true){
 			'humidity'=>(float) $live['humidity'],
 			'conf_temperature'=>(float) getTempConfig()
 		);
-		print_r($calculado);
+		echo date('d-m-Y H:i:s').":\n".str_replace(array("Array\n(\n",")\n"),'',print_r($calculado,true));
 		
 		if ($calculado['temperature']<$calculado['conf_temperature']){
 			echo "To ON\n";
 			$count_on++;
 			if ($count_on>1){
+				//mando siempre el valor de gpio por si ha fallado anteriormente
 				gpio::write('20','1');
+			}
+			if ($count_on==2){
+				//reflejo en bbdd solo una vez
 				$db->exec('INSERT INTO timer VALUES(datetime("now"),\'\')');
 			}
-			
 		}elseif($calculado['temperature']>($calculado['conf_temperature']+0.5)){
 			echo "To OFF\n";
 			if ($count_on>0){
@@ -77,11 +82,7 @@ while(true){
 			}
 			//mando siempre el valor de gpio por si ha fallado anteriormente
 			gpio::write('20','0');
-		}else{
-			//gpio::write('20','1');
 		}
-		
-		
 		$db->close();
 	}
 	sleep(10);

@@ -20,6 +20,7 @@ var myDomo={
 		jQuery('.statusBar .menu').click(function(){myDomo.showMenu();});
 		jQuery('.mainMenu button.menuTemperatura').click(function(){myDomo.windowAjustTemp();myDomo.hideMenu();});
 		jQuery('.mainMenu button.menuPrediccion').click(function(){myDomo.windowPredicionAemet();myDomo.hideMenu();});
+		jQuery('.mainMenu button.menuHistorial').click(function(){myDomo.windowHistorial();myDomo.hideMenu();});
 		
 		myDomo.refresh();
 		myDomo.refreshExternalTemp();
@@ -194,13 +195,17 @@ var myDomo={
 		jQuery('.content.windowPredicionAemet').fadeIn();
 	},
 	
+	windowHistorial:function(){
+		jQuery('.content').hide();
+		jQuery.get('/?module=getHistory',function(data){
+			jQuery('.content.windowHistory div.tableHistory').html(data);
+			jQuery('.content.windowHistory').fadeIn();
+		});
+	},
+	
 	windowMain:function(){
 		jQuery('.content').hide();
 		jQuery('.content.windowMain').fadeIn();
-	},
-	
-	changeDay:function(){
-		
 	},
 	
 	btnUpClick:function(obj){
