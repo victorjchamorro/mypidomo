@@ -19,6 +19,12 @@ function tempParts($temp, $index) {
 if (isset($_GET['module'])){
 	switch($_GET['module']){
 		case 'getLastData':
+			UTLIni::addIniFile('./data/temp.ini','TEMP');
+			$dias=UTLIni::$conf['TEMP']['days'];
+			$diaSemana=(date('w')==0 ? 6 : date('w')-1);
+			$hora=date('G');			
+			$dia=($dias[$diaSemana][$hora]=='1') ? 'day': 'night';
+			
 			$db=new DBConn();
 			$rs=$db->query('SELECT date,temperature,humidity FROM `temp` ORDER BY date DESC LIMIT 1');
 			$data=$rs->fetchArray();
@@ -27,25 +33,34 @@ if (isset($_GET['module'])){
 				'rele_status'=>gpio::read('20'),
 				'temp'=>$data['temperature'],
 				'humidity'=>$data['humidity'],
-				'date'=>$data['date']
+				'date'=>$data['date'],
+				'mode'=>UTLIni::$conf['TEMP']['temp']['mode'],
+				'current_mode'=>$dia
 			));
 			die();
 		case 'getHistory':
 			$db=new DBConn();
 			$rs=$db->query('SELECT `on`,`off` FROM `timer` ORDER BY `on` DESC LIMIT 10');
 			$html='<table><tr><td>On</td><td>Off</td><td>Time</td></tr>';
+			
+			$datetimezone=new DateTimeZone('Europe/Madrid');
+			$datetimeutc=new DateTimeZone('UTC');
+			
 			while($row=$rs->fetchArray()){
 			
-				$dateOn=new DateTime($row[0]);
-				$dateOff=new DateTime($row[1]);
+				$dateOn=new DateTime($row[0],$datetimeutc);
+				$dateOff=new DateTime($row[1], $datetimeutc);
 				
 				$interval=$dateOff->diff($dateOn);
 				
-				$minutos=$interval->format('%i:%sm');
-			
+				$strdiff=$interval->format('%h:%i:%sh');
+				
+				$dateOn->setTimezone($datetimezone);
+				$dateOff->setTimezone($datetimezone);
+				
 				$html.="<tr>";
-				$html.="<td>{$row[0]}</td><td>{$row[1]}</td>";
-				$html.="<td>$minutos</td>";
+				$html.="<td>{$dateOn->format('d/m/Y H:i:s')}</td><td>{$dateOff->format('d/m/Y H:i:s')}</td>";
+				$html.="<td>$strdiff</td>";
 				$html.="</tr>";
 			}
 			$html.="</table>";

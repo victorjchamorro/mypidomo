@@ -101,6 +101,14 @@ var myDomo={
 					jQuery('div.statusBar .runing').removeClass('on');
 				}
 				
+				if (data.current_mode=='day'){
+					jQuery('div.statusBar .modeDay i').removeClass('fa-moon');
+					jQuery('div.statusBar .modeDay i').addClass('fa-sun');
+				}else{
+					jQuery('div.statusBar .modeDay i').removeClass('fa-sun');
+					jQuery('div.statusBar .modeDay i').addClass('fa-moon');
+				}
+				
 				jQuery('div.humedad1').html('<i class="fas fa-tint"></i> '+roundHumedad+'%');
 				
 				window.setTimeout(myDomo.refresh,10000);
