@@ -59,7 +59,7 @@ if (isset($_GET['module'])){
 				$dateOff->setTimezone($datetimezone);
 				
 				$html.="<tr>";
-				$html.="<td>{$dateOn->format('d/m/Y H:i:s')}</td><td>{$dateOff->format('d/m/Y H:i:s')}</td>";
+				$html.="<td>".$dateOn->format('d/m/Y H:i:s')."</td><td>".(($row[1]!='') ? $dateOff->format('d/m/Y H:i:s') : '')."</td>";
 				$html.="<td>$strdiff</td>";
 				$html.="</tr>";
 			}
