@@ -5,6 +5,22 @@
 	outline: 0;
 }
 
+@font-face {
+    font-family: 'lcd phone';
+    src: url('/fonts/Lcdphone.woff2') format('woff2'),
+        url('/fonts/Lcdphone.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Bold LED Board-7';
+    src: url('/fonts/BoldLEDBoard-7.woff2') format('woff2'),
+        url('/fonts/BoldLEDBoard-7.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
 	text-align: center;
 	/*background: #f2f2f2;*/
@@ -143,7 +159,7 @@ div.thermometers .label.humedad1,div.thermometers .label.humedad2{ font-size:30p
 div.thermometers .label.humedad1 img,div.thermometers .label.humedad2 img{ width:30px;height:30px;}
 
 div.statusBar{position: absolute;top:0;left:0;bottom:0;	}
-div.statusBar .menu i{font-size:42px;}
+div.statusBar .menu i{font-size:50px;}
 div.statusBar i{font-size:30px;margin:5px 5px 0 5px;}
 div.statusBar .runing.on i{
 	animation-name: spin;
@@ -157,6 +173,14 @@ div.statusBar .runing.on i{
 		transform: rotate(0deg); 
 	} to { 
 		transform: rotate(59deg); 
+	}
+}
+
+@keyframes spin30 {
+	from { 
+		transform: rotate(0deg); 
+	} to { 
+		transform: rotate(36deg); 
 	}
 }
 
@@ -202,4 +226,16 @@ div.hourAjust{ position:absolute;top:260px;left:0;right:0;height:60px;}
 div.hourAjust .lineHour{float:left;margin:0 1px 0 0;padding:10px 0;display:inline-block;border:1px solid #fff;}
 div.hourAjust .lineHour:active{background-color:#666 !important;}
 div.hourAjust .lineHour.day{ background-color:#f3f3f3;color:#000;}
+
+div.windowSolar .dataSolar{ padding-top:30px; font-family:"lcd phone"; font-size:60px; text-align:left;}
+div.windowSolar .dataSolar span{ display:inline-block; min-width:270px; margin-top:5px;}
+div.windowSolar .imgSolar { text-align:left; font-size:60px;margin:18px auto 0 auto; font-family:"lcd phone"; text-align:center; width:355px;}
+div.windowSolar .imgSolar .estado{ margin-left:8px;}
+div.windowSolar .imgSolar .sol i{
+	animation-name: spin30;
+	animation-duration: 1000ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
 	

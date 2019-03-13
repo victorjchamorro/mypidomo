@@ -40,7 +40,7 @@ if (isset($_GET['module'])){
 			die();
 		case 'getHistory':
 			$db=new DBConn();
-			$rs=$db->query('SELECT `on`,`off` FROM `timer` ORDER BY `on` DESC LIMIT 10');
+			$rs=$db->query('SELECT `on`,`off` FROM `timer` ORDER BY `on` DESC');
 			$html='<table><tr><td>On</td><td>Off</td><td>Time</td></tr>';
 			
 			$datetimezone=new DateTimeZone('Europe/Madrid');
@@ -113,6 +113,11 @@ if (isset($_GET['module'])){
 				echo json_encode(array('ok'=>false,'error'=>$e->getMessage()));
 			}
 			die();
+		case 'getSolar':
+			header('Content-Type: application/json');
+			echo file_get_contents('http://192.168.1.48/');
+			die();
+			
 		break;
 	}
 }
@@ -128,6 +133,8 @@ if (isset($_GET['module'])){
 		<!--<script src="./amcharts/amcharts.js" type="text/javascript"></script> -->
 		<script type="text/javascript" src="<?php echo addRoute('./js/common.js');?>"></script>
 		
+		<meta name="mobile-web-app-capable" content="yes">
+		
 	</head>
 	<body>
 	<div class="all">
@@ -135,7 +142,7 @@ if (isset($_GET['module'])){
 			<button class="btn menuTemperatura">Temperatura</button>
 			<button class="btn menuPrediccion">Predicción</button>
 			<button class="btn menuHistorial">Históricos</button>
-			<button class="btn">Luces</button>
+			<button class="btn menuSolar">Solar</button>
 			<button class="btn">Piscina</button>
 			<button class="btn">Riego</button>
 			<button class="btnSmall btnRefreshApp"><i class="fas fa-sync-alt"></i></button>
@@ -243,6 +250,23 @@ if (isset($_GET['module'])){
 		<div class="content windowHistory">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
 			<div class="tableHistory">
+			</div>
+		</div>
+		
+		<div class="content windowSolar">
+			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
+			<div class="dataSolar">
+				<span class="data-A"></span>&nbsp;<span class="data-W"></span><br>
+				<span class="data-V"></span>&nbsp;<span class="data-P"></span>
+			</div>
+			<div class="imgSolar">
+				<span class="estado sol hide"><i class="fas fa-sun"></i></span>
+				<span class="estado nublado hide"><i class="fas fa-cloud-sun"></i></span>
+				<span class="estado noche hide"><i class="fas fa-moon"></i></span>
+				<div style="margin-top:12px;text-align:left;">
+					<i class="fas fa-solar-panel"></i>&nbsp;<span class="data-porc">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span><br>
+					<i class="fas fa-car-battery" style="font-size:75px"></i>&nbsp;<span class="data-pVb">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span>
+				</div>
 			</div>
 		</div>
 	</div>

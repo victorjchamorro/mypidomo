@@ -2,6 +2,8 @@ var myDomo={
 	
 	dataTemperature:null,
 	curWeekDay:null,
+	timeoutSolar:null,
+	flag:0,
 	
 	init:function(){
 		console.log('Inicio!');
@@ -21,11 +23,15 @@ var myDomo={
 		jQuery('.mainMenu button.menuTemperatura').click(function(){myDomo.windowAjustTemp();myDomo.hideMenu();});
 		jQuery('.mainMenu button.menuPrediccion').click(function(){myDomo.windowPredicionAemet();myDomo.hideMenu();});
 		jQuery('.mainMenu button.menuHistorial').click(function(){myDomo.windowHistorial();myDomo.hideMenu();});
+		jQuery('.mainMenu button.menuSolar').click(function(){myDomo.windowSolar();myDomo.hideMenu();});
 		
 		myDomo.refresh();
 		myDomo.refreshExternalTemp();
 		
 		window.setInterval(function(){ myDomo.fecha_hora() }, 1000);
+		setTimeout(function(){
+		window.scrollTo(0, 1);
+		}, 0);
 	},
 	
 	halt:function(){
@@ -211,7 +217,57 @@ var myDomo={
 		});
 	},
 	
+	windowSolar:function(){
+		jQuery('.content').hide();
+		jQuery('.content.windowSolar').fadeIn();
+		myDomo.refreshSolar();
+	},
+	
+	refreshSolar:function(){
+		if (myDomo.timeoutSolar) clearTimeout(myDomo.timeoutSolar);
+		jQuery.getJSON('/?module=getSolar',function(data){
+			jQuery('.content.windowSolar span.data-A').html('A: '+myDomo.numberFormat(data.a));
+			jQuery('.content.windowSolar span.data-W').html('W: '+data.w);
+			if (myDomo.flag==0){
+				jQuery('.content.windowSolar span.data-V').html('Vs:'+data.v);
+				jQuery('.content.windowSolar span.data-P').html('Ap:'+data.ap);
+				myDomo.flag++;
+			}else{
+				jQuery('.content.windowSolar span.data-V').html('Vb:'+data.vb);
+				jQuery('.content.windowSolar span.data-P').html('Wp:'+data.wp);
+				myDomo.flag=0;
+			}
+			
+			//300W se considera 100% de cosecha
+			porcentaje=Math.round(data.w*10000/300)/100;
+			if (porcentaje>100){porcentaje=100;}
+			
+			//12.6 se considera 100% de batería
+			porcBateria=Math.round(data.vb*10000/12.7)/100;
+			if (porcBateria>100) porcBateria=100;
+			
+			if (porcentaje>40 || (data.v*1) > 17.0){
+				jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
+				jQuery('.content.windowSolar .imgSolar .sol').removeClass('hide');
+			}else{
+				if ((data.v*1) > 15){
+					jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
+					jQuery('.content.windowSolar .imgSolar .nublado').removeClass('hide');
+				}else{
+					jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
+					jQuery('.content.windowSolar .imgSolar .noche').removeClass('hide');
+				}
+			}
+			
+			jQuery('.content.windowSolar span.data-porc').html(myDomo.numberFormat(porcentaje));
+			jQuery('.content.windowSolar span.data-pVb').html(myDomo.numberFormat(porcBateria));
+			
+			myDomo.timeoutSolar=setTimeout(myDomo.refreshSolar,5000);
+		});
+	},
+	
 	windowMain:function(){
+		if (myDomo.timeoutSolar) clearTimeout(myDomo.timeoutSolar);
 		jQuery('.content').hide();
 		jQuery('.content.windowMain').fadeIn();
 	},
@@ -259,6 +315,12 @@ var myDomo={
 				console.log(error);
 			}
 		});
+	},
+	
+	numberFormat:function(n){
+		number=parseFloat(Math.round(n * 100) / 100).toFixed(2);
+		if (String(number).length==4) number='0'+String(number);
+		return number;	
 	}
 	
 };
