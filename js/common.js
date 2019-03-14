@@ -1,3 +1,21 @@
+/**
+ * @author Victor J. Chamorro <victorjchamorro@gmail.com>
+ *
+ * LGPL v3 - GNU LESSER GENERAL PUBLIC LICENSE
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU LESSER General Public License as published by
+ * the Free Software Foundation, either version 3 of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU LESSER General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 var myDomo={
 	
 	dataTemperature:null,
@@ -227,30 +245,29 @@ var myDomo={
 		if (myDomo.timeoutSolar) clearTimeout(myDomo.timeoutSolar);
 		jQuery.getJSON('/?module=getSolar',function(data){
 			jQuery('.content.windowSolar span.data-A').html('A: '+myDomo.numberFormat(data.a));
-			jQuery('.content.windowSolar span.data-W').html('W: '+data.w);
+			jQuery('.content.windowSolar span.data-W').html('W: '+myDomo.numberFormat(data.w));
 			if (myDomo.flag==0){
 				jQuery('.content.windowSolar span.data-V').html('Vs:'+data.v);
-				jQuery('.content.windowSolar span.data-P').html('Ap:'+data.ap);
+				jQuery('.content.windowSolar span.data-P').html('Ap:'+myDomo.numberFormat(data.ap));
 				myDomo.flag++;
 			}else{
-				jQuery('.content.windowSolar span.data-V').html('Vb:'+data.vb);
-				jQuery('.content.windowSolar span.data-P').html('Wp:'+data.wp);
+				jQuery('.content.windowSolar span.data-V').html('Vb:'+myDomo.numberFormat(data.vb));
+				jQuery('.content.windowSolar span.data-P').html('Wp:'+myDomo.numberFormat(data.wp));
 				myDomo.flag=0;
 			}
 			
 			//300W se considera 100% de cosecha
 			porcentaje=Math.round(data.w*10000/300)/100;
-			if (porcentaje>100){porcentaje=100;}
 			
 			//12.6 se considera 100% de batería
 			porcBateria=Math.round(data.vb*10000/12.7)/100;
-			if (porcBateria>100) porcBateria=100;
+			if (porcBateria>100){porcBateria=100;}
 			
 			if (porcentaje>40 || (data.v*1) > 17.0){
 				jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
 				jQuery('.content.windowSolar .imgSolar .sol').removeClass('hide');
 			}else{
-				if ((data.v*1) > 15){
+				if ((data.v*1) > 12){
 					jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
 					jQuery('.content.windowSolar .imgSolar .nublado').removeClass('hide');
 				}else{
@@ -260,7 +277,7 @@ var myDomo={
 			}
 			
 			jQuery('.content.windowSolar span.data-porc').html(myDomo.numberFormat(porcentaje));
-			jQuery('.content.windowSolar span.data-pVb').html(myDomo.numberFormat(porcBateria));
+			jQuery('.content.windowSolar span.data-pVb').html(porcBateria==100 ? "100.0" : myDomo.numberFormat(porcBateria));
 			
 			myDomo.timeoutSolar=setTimeout(myDomo.refreshSolar,5000);
 		});
@@ -318,6 +335,7 @@ var myDomo={
 	},
 	
 	numberFormat:function(n){
+		if (n<0){n=0;}
 		number=parseFloat(Math.round(n * 100) / 100).toFixed(2);
 		if (String(number).length==4) number='0'+String(number);
 		return number;	
