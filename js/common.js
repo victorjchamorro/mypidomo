@@ -259,8 +259,10 @@ var myDomo={
 			//300W se considera 100% de cosecha
 			porcentaje=Math.round(data.w*10000/300)/100;
 			
-			//12.6 se considera 100% de batería
-			porcBateria=Math.round(data.vb*10000/12.7)/100;
+			//12.7 se considera 100% de batería
+			//10.0 se considera 0% de batería
+			porcBateria=myDomo.scale(data.vb*100,10*100,12.7*100,0,100);
+			
 			if (porcBateria>100){porcBateria=100;}
 			
 			if (porcentaje>40 || (data.v*1) > 17.0){
@@ -339,6 +341,10 @@ var myDomo={
 		number=parseFloat(Math.round(n * 100) / 100).toFixed(2);
 		if (String(number).length==4) number='0'+String(number);
 		return number;	
+	},
+	
+	scale:function(num, in_min, in_max, out_min, out_max){
+		return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
 	
 };
