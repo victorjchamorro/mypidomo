@@ -22,6 +22,7 @@ var myDomo={
 	curWeekDay:null,
 	timeoutSolar:null,
 	flag:0,
+	animationBattery:0,
 	
 	init:function(){
 		console.log('Inicio!');
@@ -42,6 +43,8 @@ var myDomo={
 		jQuery('.mainMenu button.menuPrediccion').click(function(){myDomo.windowPredicionAemet();myDomo.hideMenu();});
 		jQuery('.mainMenu button.menuHistorial').click(function(){myDomo.windowHistorial();myDomo.hideMenu();});
 		jQuery('.mainMenu button.menuSolar').click(function(){myDomo.windowSolar();myDomo.hideMenu();});
+		jQuery('button.inversorOn').click(function(){myDomo.inversor('on');});
+		jQuery('button.inversorOff').click(function(){myDomo.inversor('off');});
 		
 		myDomo.refresh();
 		myDomo.refreshExternalTemp();
@@ -241,9 +244,9 @@ var myDomo={
 		myDomo.refreshSolar();
 	},
 	
-	refreshSolar:function(){
+	refreshSolar:function(data){
 		if (myDomo.timeoutSolar) clearTimeout(myDomo.timeoutSolar);
-		jQuery.getJSON('/?module=getSolar',function(data){
+		var procesaRespuesta=function(data){
 			jQuery('.content.windowSolar span.data-A').html('A: '+myDomo.numberFormat(data.a));
 			jQuery('.content.windowSolar span.data-W').html('W: '+myDomo.numberFormat(data.w));
 			if (myDomo.flag==0){
@@ -260,8 +263,8 @@ var myDomo={
 			porcentaje=Math.round(data.w*10000/300)/100;
 			
 			//12.7 se considera 100% de batería
-			//10.0 se considera 0% de batería
-			porcBateria=myDomo.scale(data.vb*100,10*100,12.7*100,0,100);
+			//10.1 se considera 0% de batería
+			porcBateria=myDomo.scale(data.vb*100,10.1*100,12.7*100,0,100);
 			
 			if (porcBateria>100){porcBateria=100;}
 			
@@ -278,12 +281,49 @@ var myDomo={
 				}
 			}
 			
-			jQuery('.content.windowSolar span.data-porc').html(myDomo.numberFormat(porcentaje));
+			jQuery('.content.windowSolar span.data-porc').html(porcentaje>100 ? myDomo.numberFormat10(porcentaje) : myDomo.numberFormat(porcentaje));
 			jQuery('.content.windowSolar span.data-pVb').html(porcBateria==100 ? "100.0" : myDomo.numberFormat(porcBateria));
 			
+			if (data.estado=="on"){ //Inversor ON
+				jQuery('.content.windowSolar .actions i.red').addClass('hide');
+				jQuery('.content.windowSolar .actions button.inversorOn').addClass('hide');
+				jQuery('.content.windowSolar .actions button.inversorOff').removeClass('hide');
+				//myDomo.batteryAnimate();
+				jQuery('.content.windowSolar .actions .inversor').removeClass('hide');
+			}else{ //Inversor Off
+				jQuery('.content.windowSolar .actions i.red').removeClass('hide');
+				jQuery('.content.windowSolar .actions .inversor').addClass('hide');
+				jQuery('.content.windowSolar .actions button.inversorOn').removeClass('hide');
+				jQuery('.content.windowSolar .actions button.inversorOff').addClass('hide');
+			}
+			
 			myDomo.timeoutSolar=setTimeout(myDomo.refreshSolar,5000);
+		}
+		if (data){
+			procesaRespuesta(data);
+		}else{
+			jQuery.getJSON('/?module=getSolar',procesaRespuesta);
+		}
+	},
+	
+	inversor:function(estado){
+		jQuery.getJSON('/?module=inversor_'+estado,function(data){
+			myDomo.refreshSolar();
 		});
 	},
+	/*
+	batteryAnimate:function(){
+		jQuery('.content.windowSolar .actions i.inversor')
+			.hide()
+			.eq(myDomo.animationBattery)
+			.delay(1000).show();
+		myDomo.animationBattery++;
+		if (myDomo.animationBattery>2){ 
+			myDomo.animationBattery=0;			
+		}else{
+			window.setTimeout(myDomo.batteryAnimate,1000);
+		}
+	},*/
 	
 	windowMain:function(){
 		if (myDomo.timeoutSolar) clearTimeout(myDomo.timeoutSolar);
@@ -340,6 +380,13 @@ var myDomo={
 		if (n<0){n=0;}
 		number=parseFloat(Math.round(n * 100) / 100).toFixed(2);
 		if (String(number).length==4) number='0'+String(number);
+		return number;	
+	},
+	
+	numberFormat10:function(n){
+		if (n<0){n=0;}
+		number=parseFloat(Math.round(n * 100) / 100).toFixed(1);
+		if (String(number).length==3) number='0'+String(number);
 		return number;	
 	},
 	

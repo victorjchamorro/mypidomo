@@ -135,7 +135,14 @@ if (isset($_GET['module'])){
 			header('Content-Type: application/json');
 			echo file_get_contents('http://192.168.1.48/');
 			die();
-			
+		case 'inversor_on':
+			header('Content-Type: application/json');
+			echo file_get_contents('http://192.168.1.48/on');
+			die();
+		case 'inversor_off':
+			header('Content-Type: application/json');
+			echo file_get_contents('http://192.168.1.48/off');
+			die();
 		break;
 	}
 }
@@ -285,6 +292,23 @@ if (isset($_GET['module'])){
 					<i class="fas fa-solar-panel"></i>&nbsp;<span class="data-porc">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span><br>
 					<i class="fas fa-car-battery" style="font-size:75px"></i>&nbsp;<span class="data-pVb">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span>
 				</div>
+			</div>
+			<div class="actions">
+			
+				<i class="fas fa-plug red"></i>
+				<img class="inversor" src="/imgs/home-no-door.png" style="margin-top:4px;">
+				<i class="inversor fas fa-sun"></i>
+				<!--
+				<i class="inversor fas fa-battery-full"></i>
+				<i class="inversor fas fa-battery-three-quarters"></i>
+				<i class="inversor fas fa-battery-half"></i>
+				<i class="inversor fas fa-battery-quarter"></i>
+				<i class="inversor fas fa-battery-empty"></i>
+				-->
+				<div style="height:30px;"></div>
+				
+				<button class="btnTransparent inversorOn hide"><i class="fas fa-power-off"></i></button>
+				<button class="btnTransparent inversorOff hide"><i class="fas fa-power-off"></i></button>
 			</div>
 		</div>
 	</div>

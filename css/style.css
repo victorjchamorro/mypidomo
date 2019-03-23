@@ -187,6 +187,7 @@ div.statusBar .runing.on i{
 button.btn{ width:200px; height:60px;}
 button.btnSmall{ width:50px; height:40px;}
 button.btn i{font-size:32px;}
+button.btnTransparent{  width:100px; height:100px; background:transparent; border:none;font-size:42px;color:#fff;border: 1px solid #fff;border-radius: 10px;}
 
 div.mainMenu{
 	position:absolute;
@@ -229,7 +230,7 @@ div.hourAjust .lineHour.day{ background-color:#f3f3f3;color:#000;}
 
 div.windowSolar .dataSolar{ padding-top:30px; font-family:"lcd phone"; font-size:60px; text-align:left;}
 div.windowSolar .dataSolar span{ display:inline-block; min-width:270px; margin-top:5px;}
-div.windowSolar .imgSolar { text-align:left; font-size:60px;margin:18px auto 0 auto; font-family:"lcd phone"; text-align:center; width:355px;}
+div.windowSolar .imgSolar { /*text-align:left;*/ font-size:60px;font-family:"lcd phone";width:355px;margin:18px 0 0 0;float:left;}
 div.windowSolar .imgSolar .estado{ margin-left:8px;}
 div.windowSolar .imgSolar .sol i{
 	animation-name: spin30;
@@ -237,5 +238,6 @@ div.windowSolar .imgSolar .sol i{
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
 }
-
+div.windowSolar .actions { margin:18px 0 0 0; float:left; font-size:60px; width:calc( 100% - 355px);}
+div.windowSolar .actions i.inversor { font-size: 31px;position: relative;top: -7px;left: -70px;color: #000;}
 	
