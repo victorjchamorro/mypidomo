@@ -143,6 +143,28 @@ if (isset($_GET['module'])){
 			header('Content-Type: application/json');
 			echo file_get_contents('http://192.168.1.48/off');
 			die();
+		case 'getSolarHistory':
+			$db=new DBConn();
+			$rs=$db->query("select strftime('%Hh',datetime(date,'localtime')),avg(voltbat),avg(volt*amp) from solar where date(date)=date('now') or date(date)=date(datetime('now', '-1 day')) group by strftime('%d%H',date) order by date asc limit 24");
+			$dataB=array();
+			$dataB['labels']=array();
+			$dataB['series']=array();
+			$dataS=$dataB;
+			$dataS['series']['w']=array();
+			$dataB['series']['vb']=array();
+			while($row=$rs->fetchArray()){
+				$dataB['labels'][]=$row[0];
+				$dataB['series']['vb'][]=$row[1];
+				$dataS['series']['w'][]=$row[2];
+			}
+			$dataB['series']=array_values($dataB['series']);
+			$dataS['series']=array_values($dataS['series']);
+			
+			$dataS['labels']=$dataB['labels'];
+			
+			header('Content-Type: application/json');
+			echo json_encode(array('bateria'=>$dataB,'produccion'=>$dataS));
+			die();
 		break;
 	}
 }
@@ -153,10 +175,13 @@ if (isset($_GET['module'])){
 		<link rel="stylesheet" type="text/css" href="<?php echo addRoute('./css/style.css');?>" />
 		<link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
 		<link href="./fontawesome/css/all.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="<?php echo addRoute('./css/chartist.min.css');?>" />
+		
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 		<script src="./js/jquery-1.9.1.min.js"></script>
 		<!--<script src="./amcharts/amcharts.js" type="text/javascript"></script> -->
 		<script type="text/javascript" src="<?php echo addRoute('./js/common.js');?>"></script>
+		<script type="text/javascript" src="<?php echo addRoute('./js/chartist.min.js');?>"></script>
 		
 		<meta name="mobile-web-app-capable" content="yes">
 		
@@ -280,35 +305,45 @@ if (isset($_GET['module'])){
 		
 		<div class="content windowSolar">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
-			<div class="dataSolar">
-				<span class="data-A"></span>&nbsp;<span class="data-W"></span><br>
-				<span class="data-V"></span>&nbsp;<span class="data-P"></span>
-			</div>
-			<div class="imgSolar">
-				<span class="estado sol hide"><i class="fas fa-sun"></i></span>
-				<span class="estado nublado hide"><i class="fas fa-cloud-sun"></i></span>
-				<span class="estado noche hide"><i class="fas fa-moon"></i></span>
-				<div style="margin-top:12px;text-align:left;">
-					<i class="fas fa-solar-panel"></i>&nbsp;<span class="data-porc">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span><br>
-					<i class="fas fa-car-battery" style="font-size:75px"></i>&nbsp;<span class="data-pVb">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span>
+			<button class="btnSmall btnChart"><i class="fas fa-chart-line"></i></button>
+			<div class="data">
+				<div class="dataSolar">
+					<span class="data-A"></span>&nbsp;<span class="data-W"></span><br>
+					<span class="data-V"></span>&nbsp;<span class="data-P"></span>
+				</div>
+				<div class="imgSolar">
+					<span class="estado sol hide"><i class="fas fa-sun"></i></span>
+					<span class="estado nublado hide"><i class="fas fa-cloud-sun"></i></span>
+					<span class="estado noche hide"><i class="fas fa-moon"></i></span>
+					<div style="margin-top:12px;text-align:left;">
+						<i class="fas fa-solar-panel"></i>&nbsp;<span class="data-porc">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span><br>
+						<i class="fas fa-car-battery" style="font-size:75px"></i>&nbsp;<span class="data-pVb">0</span> <span style="font-family:'Bold LED Board-7';font-size: 50px;">%</span>
+					</div>
+				</div>
+				<div class="actions">
+				
+					<i class="fas fa-plug red"></i>
+					<img class="inversor" src="/imgs/home-no-door.png" style="margin-top:4px;">
+					<i class="inversor fas fa-sun"></i>
+					<!--
+					<i class="inversor fas fa-battery-full"></i>
+					<i class="inversor fas fa-battery-three-quarters"></i>
+					<i class="inversor fas fa-battery-half"></i>
+					<i class="inversor fas fa-battery-quarter"></i>
+					<i class="inversor fas fa-battery-empty"></i>
+					-->
+					<div style="height:30px;"></div>
+					
+					<button class="btnTransparent inversorOn hide"><i class="fas fa-power-off"></i></button>
+					<button class="btnTransparent inversorOff hide"><i class="fas fa-power-off"></i></button>
 				</div>
 			</div>
-			<div class="actions">
-			
-				<i class="fas fa-plug red"></i>
-				<img class="inversor" src="/imgs/home-no-door.png" style="margin-top:4px;">
-				<i class="inversor fas fa-sun"></i>
-				<!--
-				<i class="inversor fas fa-battery-full"></i>
-				<i class="inversor fas fa-battery-three-quarters"></i>
-				<i class="inversor fas fa-battery-half"></i>
-				<i class="inversor fas fa-battery-quarter"></i>
-				<i class="inversor fas fa-battery-empty"></i>
-				-->
-				<div style="height:30px;"></div>
+			<div class="chart">
+				<i class="fas fa-car-battery"></i>
+				<div class="chart-bateria"></div>
 				
-				<button class="btnTransparent inversorOn hide"><i class="fas fa-power-off"></i></button>
-				<button class="btnTransparent inversorOff hide"><i class="fas fa-power-off"></i></button>
+				<i class="fas fa-solar-panel"></i>
+				<div class="chart-produccion"></div>
 			</div>
 		</div>
 	</div>

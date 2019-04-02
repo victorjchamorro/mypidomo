@@ -202,6 +202,7 @@ div.mainMenu{
 div.mainMenu button{font-size:20px;}
 
 button.btnToMain{ position:absolute;top:0;right:0;}
+button.btnChart{ position:absolute;top:40px;right:0;}
 button.btnRefreshApp{ position:absolute;bottom:0;right:0;}
 button.btnHaltApp{ position:absolute;bottom:0;left:0;}
 
@@ -240,4 +241,12 @@ div.windowSolar .imgSolar .sol i{
 }
 div.windowSolar .actions { margin:18px 0 0 0; float:left; font-size:60px; width:calc( 100% - 355px);}
 div.windowSolar .actions i.inversor { font-size: 31px;position: relative;top: -7px;left: -70px;color: #000;}
-	
+
+div.windowSolar .chart{ text-align:left;padding-right:10px;padding-top:10px;}
+div.windowSolar .chart i{ font-size:26px;margin-left:52px;}
+
+
+div.windowSolar .chart .ct-label{ color:#ddd;}
+div.windowSolar .chart .ct-grid { stroke:#ddd;}
+
+div.windowSolar .chart .chart-produccion .ct-line,div.windowSolar .chart .chart-produccion .ct-point { stroke:blue;}

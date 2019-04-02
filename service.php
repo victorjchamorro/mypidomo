@@ -59,6 +59,14 @@ function initDB($db){
 			`on` TEXT NOT NULL,
 			`off` TEXT NOT NULL
 			)';
+	$tableSolar='CREATE TABLE IF NOT EXISTS solar(
+			date TEXT NOT NULL PRIMARY KEY,
+			inversor TEXT NOT NULL,
+			volt REAL NOT NULL,
+			amp REAL NOT NULL,
+			voltbat REAL NOT NULL,
+			consumo REAL NOT NULL
+			)';
 		
 }
 
@@ -103,6 +111,28 @@ while(true){
 		}
 		$db->close();
 	}
+	
+	$solarstr=file_get_contents('http://192.168.1.48/');
+	if ($solarstr){
+		$json=json_decode($solarstr,true);
+		if ($json){
+			/*
+			estado	"on"
+			v	"17.43"
+			a	"3.74"
+			w	"65.20"
+			ap	"16.40"
+			wp	"275.83"
+			vb	"13.21"
+			*/
+			$json['consumo_inversor']=0;
+		
+			$db=new DBConn();
+			$db->exec('INSERT INTO solar VALUES(datetime("now"),"'.$json['estado'].'",'.$json['v'].','.$json['a'].','.$json['vb'].','.$json['consumo_inversor'].'0)');
+			$db->close();
+		}
+	}
+	
 	sleep(10);
 }
 ?>

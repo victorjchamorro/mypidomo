@@ -46,6 +46,8 @@ var myDomo={
 		jQuery('button.inversorOn').click(function(){myDomo.inversor('on');});
 		jQuery('button.inversorOff').click(function(){myDomo.inversor('off');});
 		
+		jQuery('.windowSolar .btnChart').click(function(){myDomo.solarChart();});
+		
 		myDomo.refresh();
 		myDomo.refreshExternalTemp();
 		
@@ -240,6 +242,8 @@ var myDomo={
 	
 	windowSolar:function(){
 		jQuery('.content').hide();
+		jQuery('.windowSolar .data').show();
+		jQuery('.windowSolar .chart').hide();
 		jQuery('.content.windowSolar').fadeIn();
 		myDomo.refreshSolar();
 	},
@@ -352,7 +356,7 @@ var myDomo={
 		myDomo.saveHoursWeekDay();
 	},
 	
-	saveHoursWeekDay(){
+	saveHoursWeekDay:function(){
 		jQuery.ajax({
 			dataType:'json',
 			url:'/index.php?module=setDataTemp',
@@ -376,6 +380,16 @@ var myDomo={
 		});
 	},
 	
+	solarChart:function(){
+		jQuery.getJSON('/?module=getSolarHistory',function(data){
+			jQuery('.windowSolar .data').hide();
+			jQuery('.windowSolar .chart').show();
+			//data={"labels":["14","15"],"series":[[153.30478666667,96.863201604278],[13.233666666667,13.204171122995]]};
+			new Chartist.Line('.windowSolar .chart .chart-bateria', data.bateria);
+			new Chartist.Line('.windowSolar .chart .chart-produccion', data.produccion);
+		});
+	},
+	
 	numberFormat:function(n){
 		if (n<0){n=0;}
 		number=parseFloat(Math.round(n * 100) / 100).toFixed(2);
@@ -393,7 +407,6 @@ var myDomo={
 	scale:function(num, in_min, in_max, out_min, out_max){
 		return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 	}
-	
 };
 
 jQuery(document).ready(function(){
