@@ -132,8 +132,40 @@ if (isset($_GET['module'])){
 			}
 			die();
 		case 'getSolar':
+			
+			$data=array();
+			$data['estado']='off';
+			$data['v']=0;
+			$data['a']=0;
+			$data['w']=0;
+			$data['ap']=0;
+			$data['wp']=0;
+			$data['vb']=0;
+			$data['soc']=0;
+			//Sistema antiguo
+			$data1=@file_get_contents('http://192.168.1.48/');
+			if ($data1){
+				$data=json_decode($data1,true);
+			}
+			
+			//emoncms
+			$data2=file_get_contents('http://192.168.1.49/emoncms/input/get/?&apikey=8b3a05b077bfa5ed9fc395b3ec166bc6');
+			if ($data2){
+				$json=json_decode($data2,true);
+				$json2=$json['emontx'];
+				$json3=$json['bmv700'];
+				$data['v']=$json2['fv_v']['value'];
+				$data['a']=$json3['I']['value']/1000;
+				$data['w']=$json2['fv_sum_w']['value'];
+				$data['ap']=$json2['fv_i']['value'];
+				$data['wp']=$json2['load_w']['value'];
+				$data['vb']=$json2['bat_v']['value'];
+				$data['soc']=$json3['SOC']['value']/10;
+			}
+			
 			header('Content-Type: application/json');
-			echo file_get_contents('http://192.168.1.48/');
+			echo json_encode($data);
+			
 			die();
 		case 'inversor_on':
 			header('Content-Type: application/json');
@@ -145,21 +177,23 @@ if (isset($_GET['module'])){
 			die();
 		case 'getSolarHistory':
 			$db=new DBConn();
-			$rs=$db->query("select strftime('%Hh',datetime(date,'localtime')),avg(voltbat),avg(volt*amp) from solar where date(date)=date('now') or date(date)=date(datetime('now', '-1 day')) group by strftime('%d%H',date) order by date asc limit 24");
+			$rs=$db->query("select strftime('%H',datetime(date,'localtime')),avg(voltbat),avg(volt*amp) from solar where date(date)=date('now') or date(date)=date(datetime('now', '-1 day')) group by strftime('%d%H',date) order by date desc limit 25");
 			$dataB=array();
 			$dataB['labels']=array();
 			$dataB['series']=array();
 			$dataS=$dataB;
-			$dataS['series']['w']=array();
-			$dataB['series']['vb']=array();
+			$dataS['series'][0]=array();
+			$dataB['series'][0]=array();
 			while($row=$rs->fetchArray()){
 				$dataB['labels'][]=$row[0];
-				$dataB['series']['vb'][]=$row[1];
-				$dataS['series']['w'][]=$row[2];
+				$dataB['series'][0][]=$row[1];
+				$dataS['series'][0][]=$row[2];
 			}
-			$dataB['series']=array_values($dataB['series']);
-			$dataS['series']=array_values($dataS['series']);
+			//Invierto los valores para que se pinte al final lo nuevo
+			$dataB['series'][0]=array_reverse($dataB['series'][0]);
+			$dataS['series'][0]=array_reverse($dataS['series'][0]);
 			
+			$dataB['labels']=array_reverse($dataB['labels']);
 			$dataS['labels']=$dataB['labels'];
 			
 			header('Content-Type: application/json');
@@ -340,10 +374,10 @@ if (isset($_GET['module'])){
 			</div>
 			<div class="chart">
 				<i class="fas fa-car-battery"></i>
-				<div class="chart-bateria"></div>
+				<div class="chart-bateria" style="height:185px;"></div>
 				
 				<i class="fas fa-solar-panel"></i>
-				<div class="chart-produccion"></div>
+				<div class="chart-produccion" style="height:185px;"></div>
 			</div>
 		</div>
 	</div>

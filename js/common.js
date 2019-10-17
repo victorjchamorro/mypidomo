@@ -259,24 +259,25 @@ var myDomo={
 				myDomo.flag++;
 			}else{
 				jQuery('.content.windowSolar span.data-V').html('Vb:'+myDomo.numberFormat(data.vb));
-				jQuery('.content.windowSolar span.data-P').html('Wp:'+myDomo.numberFormat(data.wp));
+				jQuery('.content.windowSolar span.data-P').html('Wl:'+myDomo.numberFormat(data.wp));
 				myDomo.flag=0;
 			}
 			
-			//300W se considera 100% de cosecha
-			porcentaje=Math.round(data.w*10000/300)/100;
+			//1600W se considera 100% de cosecha
+			porcentaje=Math.round(data.w*10000/1600)/100;
 			
 			//12.7 se considera 100% de batería
-			//10.1 se considera 0% de batería
-			porcBateria=myDomo.scale(data.vb*100,10.1*100,12.7*100,0,100);
+			//11.1 se considera 0% de batería
+			//porcBateria=myDomo.scale(data.vb*100,11.1*2*100,12.7*2*100,0,100);
+			porcBateria=data.soc;
 			
 			if (porcBateria>100){porcBateria=100;}
 			
-			if (porcentaje>40 || (data.v*1) > 17.0){
+			if (porcentaje>40 || (data.w*1) > 100.0){
 				jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
 				jQuery('.content.windowSolar .imgSolar .sol').removeClass('hide');
 			}else{
-				if ((data.v*1) > 12){
+				if ((data.w*1) > 50){
 					jQuery('.content.windowSolar .imgSolar .estado').addClass('hide');
 					jQuery('.content.windowSolar .imgSolar .nublado').removeClass('hide');
 				}else{
@@ -391,9 +392,9 @@ var myDomo={
 	},
 	
 	numberFormat:function(n){
-		if (n<0){n=0;}
+		//if (n<0){n=0;}
 		number=parseFloat(Math.round(n * 100) / 100).toFixed(2);
-		if (String(number).length==4) number='0'+String(number);
+		if (n<0 && String(number).length==4) number='0'+String(number);
 		return number;	
 	},
 	

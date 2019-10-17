@@ -242,11 +242,11 @@ div.windowSolar .imgSolar .sol i{
 div.windowSolar .actions { margin:18px 0 0 0; float:left; font-size:60px; width:calc( 100% - 355px);}
 div.windowSolar .actions i.inversor { font-size: 31px;position: relative;top: -7px;left: -70px;color: #000;}
 
-div.windowSolar .chart{ text-align:left;padding-right:10px;padding-top:10px;}
+div.windowSolar .chart{ text-align:left;padding-right:15px;padding-top:10px;}
 div.windowSolar .chart i{ font-size:26px;margin-left:52px;}
 
 
-div.windowSolar .chart .ct-label{ color:#ddd;}
+div.windowSolar .chart .ct-label{ color:#fff;}
 div.windowSolar .chart .ct-grid { stroke:#ddd;}
 
 div.windowSolar .chart .chart-produccion .ct-line,div.windowSolar .chart .chart-produccion .ct-point { stroke:blue;}
