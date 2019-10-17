@@ -337,7 +337,7 @@ if (isset($_GET['module'])){
 			</div>
 		</div>
 		
-		<div class="content windowSolar">
+		<div class="content windowSolarOld">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
 			<button class="btnSmall btnChart"><i class="fas fa-chart-line"></i></button>
 			<div class="data">
@@ -379,6 +379,10 @@ if (isset($_GET['module'])){
 				<i class="fas fa-solar-panel"></i>
 				<div class="chart-produccion" style="height:185px;"></div>
 			</div>
+		</div>
+		<div class="content windowSolar">
+			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
+			<iframe src="http://192.168.1.49/emoncms/dashboard/view?id=7" scrolling="no" width="100%" height="190" frameborder="0"></iframe>
 		</div>
 	</div>
 	</body>
