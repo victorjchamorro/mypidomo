@@ -382,7 +382,13 @@ if (isset($_GET['module'])){
 		</div>
 		<div class="content windowSolar">
 			<button class="btnSmall btnToMain"><i class="fas fa-arrow-left"></i></button>
-			<iframe src="http://192.168.1.49/emoncms/dashboard/view?id=7" scrolling="no" width="100%" height="190" frameborder="0"></iframe>
+			<iframe src="http://192.168.1.49/emoncms/dashboard/view?id=7" scrolling="no" width="100%" height="360" frameborder="0"></iframe>
+			<div class="sensorUno" style="display:inline;">
+				<i class="fas fa-thermometer-three-quarters"></i> <span class="temp1">--</span><span class="temp2">.-</span><strong>&deg;</strong>
+			</div>
+			<div class="sensorDos" style="display:inline;">
+				<i class="fas fa-thermometer-three-quarters"></i> <span class="temp1">--</span><span class="temp2">.-</span><strong>&deg;</strong>
+			</div>
 		</div>
 	</div>
 	</body>

@@ -250,3 +250,8 @@ div.windowSolar .chart .ct-label{ color:#fff;}
 div.windowSolar .chart .ct-grid { stroke:#ddd;}
 
 div.windowSolar .chart .chart-produccion .ct-line,div.windowSolar .chart .chart-produccion .ct-point { stroke:blue;}
+
+div.windowSolar .temp1{ font-size:40px; font-family:Dosis; font-weight:bold;}
+div.windowSolar .temp2{ font-size:16px; font-family:Dosis; font-weight:bold;}
+div.windowSolar .sensorUno i,div.windowSolar .sensorDos i{ font-size: 36px;}
+
